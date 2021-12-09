@@ -47,15 +47,7 @@ public class ReportesController {
 			    return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 			  }
 }
-	@PostMapping("/Clientes")
-	  public ResponseEntity<Reportes> CrearCliente(@RequestBody Reportes lista) {
-		  try {
-			    Reportes reporterepositorio= reportesRepository.save(new Reportes(lista.getCedula(),lista.getCodigo_venta(),lista.getDetalleventa(),lista.getTotalventa(),lista.getValorventa(),lista.getIvaventa()));
-			    return new ResponseEntity<>(reporterepositorio , HttpStatus.CREATED);
-			  } catch (Exception e) {
-			    return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-			  }
-	  }
+	
 	
 	
 }
