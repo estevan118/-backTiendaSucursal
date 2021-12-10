@@ -1,7 +1,4 @@
 package co.edu.lagenerica.controller;
-
-
-
 import java.util.ArrayList;
 import java.util.*;
 
@@ -23,7 +20,6 @@ import co.edu.lagenerica.model.Cliente;
 
 import co.edu.lagenerica.repository.TutorialRepository;
 
-//@CrossOrigin(origins = "http://localhost:8081")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/cliente")
@@ -91,7 +87,21 @@ public class TutorialController {
 		  }
 	  }
 	  
-
+	  @PutMapping("/ActualizarClientes/{cedula}")
+	  public ResponseEntity<Cliente> ActualizarClientecedula(@PathVariable("cedula") String cedula, @RequestBody Cliente tutorial){
+		  Optional<Cliente> tutorialData = tutorialRepository.findById(cedula);
+		  if (tutorialData.isPresent()) {
+		    Cliente _tutorial = tutorialData.get();
+		    _tutorial.setDireccion_cliente(tutorial.getDireccion_cliente());
+		    _tutorial.setEmail_cliente(tutorial.getEmail_cliente());
+		    _tutorial.setNombre_cliente(tutorial.getNombre_cliente());
+		    _tutorial.setTelefono_cliente(tutorial.getTelefono_cliente());
+		    return new ResponseEntity<>(tutorialRepository.save(_tutorial), HttpStatus.OK);
+		  } else {
+		    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		  }
+	  }
+	
 	  
 	  @DeleteMapping("/ClientesEliminarID/{id}") 
 	  public ResponseEntity<HttpStatus> BorrarPorId(String id) {
@@ -117,21 +127,6 @@ public class TutorialController {
 			  } catch (Exception e) {
 			    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 			  }
-	  }
-	  
-	  @PutMapping("/ActualizarClientes/{cedula}")
-	  public ResponseEntity<Cliente> ActualizarClientecedula(@PathVariable("cedula") String cedula, @RequestBody Cliente tutorial){
-		  Optional<Cliente> tutorialData = tutorialRepository.findById(cedula);
-		  if (tutorialData.isPresent()) {
-		    Cliente _tutorial = tutorialData.get();
-		    _tutorial.setDireccion_cliente(tutorial.getDireccion_cliente());
-		    _tutorial.setEmail_cliente(tutorial.getEmail_cliente());
-		    _tutorial.setNombre_cliente(tutorial.getNombre_cliente());
-		    _tutorial.setTelefono_cliente(tutorial.getTelefono_cliente());
-		    return new ResponseEntity<>(tutorialRepository.save(_tutorial), HttpStatus.OK);
-		  } else {
-		    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		  }
 	  }
 
 	  @DeleteMapping("/Clientes")

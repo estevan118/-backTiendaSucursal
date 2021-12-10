@@ -1,17 +1,24 @@
 package com.equipox.misiontic2022.tiendasgenericas.tiendastrom.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.equipox.misiontic2022.tiendasgenericas.tiendastrom.model.Products;
 import com.equipox.misiontic2022.tiendasgenericas.tiendastrom.repository.ProductRepository;
+
 
 
 
@@ -46,6 +53,40 @@ public class ProductController {
 		}
 	}
 	
+	@GetMapping("/products")
+	public ResponseEntity<List<Products>> getAllClientes(@RequestParam(required = false) String name) {
+		try {
+			List<Products> products = new ArrayList<Products>();
 
+			if (name == null) {
+				productRepository.findAll().forEach(products::add);
+			} else {
+				productRepository.findByName(name).forEach(products::add);
+			}
+
+			if (products.isEmpty()) {
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			}
+
+			return new ResponseEntity<>(products, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+	
+	@GetMapping("/products/code/{code}")
+	public ResponseEntity<List<Products>> findByCode(@PathVariable("code") String code) {
+		try {
+			List<Products> productos = productRepository.findByCode(code);
+
+			if (productos.isEmpty()) {
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			}
+			return new ResponseEntity<>(productos, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 }
